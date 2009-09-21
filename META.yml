@@ -1,0 +1,21 @@
+---
+author: ~
+build_requires:
+  ExtUtils::MakeMaker: 6.42
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
+distribution_type: module
+generated_by: 'Module::Install version 0.91'
+license: unknown
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+no_index:
+  directory:
+    - inc
+requires:
+  DBD::SQLite: 0
+  DBI: 0
+  DateTime::Format::SQLite: 0
+  Moose: 0
+  REST::Google: 0
