@@ -10,6 +10,7 @@ requires 'REST::Google';
 requires 'XML::Simple';
 requires 'Data::Entropy::Algorithms';
 requires 'Module::Pluggable';
+requires 'Try::Tiny';
 
 auto_install;
 WriteAll;

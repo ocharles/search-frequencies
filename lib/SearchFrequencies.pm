@@ -1,6 +1,7 @@
 package SearchFrequencies;
 use Moose;
 use Module::Pluggable require => 1, sub_name => '_providers', search_path => 'SearchFrequencies::Search';
+use Try::Tiny;
 
 has 'providers' => (
     isa => 'ArrayRef',
@@ -13,9 +14,14 @@ has 'providers' => (
 
 sub search {
     my ($self, $query) = @_;
-    return {
-        map { $_->name => $_->search($query) } @{ $self->providers }
-    };
+    my $results = {};
+    for my $provider (@{ $self->providers }) {
+        try {
+            my $count = $provider->search($query);
+            $results->{ $provider->name } = $count;
+        }
+    }
+    return $results;
 }
 
 __PACKAGE__->meta->make_immutable;
