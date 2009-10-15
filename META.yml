@@ -17,5 +17,6 @@ requires:
   DBD::SQLite: 0
   DBI: 0
   DateTime::Format::SQLite: 0
+  JSON::Any: 0
   Moose: 0
   REST::Google: 0

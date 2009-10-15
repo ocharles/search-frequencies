@@ -4,6 +4,8 @@ use REST::Google::Search;
 
 with 'SearchFrequencies::Search';
 
+has '+name' => ( default => 'Google' );
+
 sub BUILD {
     REST::Google::Search->http_referer('http://www.lancs.ac.uk/~charles/');
 }
@@ -12,7 +14,6 @@ sub search {
     my ($self, $query) = @_;
     my $res = REST::Google::Search->new(
         q => $query,
-        hl => 'fr'
     );
 
     my $data = $res->responseData;

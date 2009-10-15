@@ -1,21 +1,13 @@
-package SeachFrequencies::Search::Bing;
+package SearchFrequencies::Search::Bing;
 use Moose;
 use LWP::UserAgent;
 use JSON::Any;
 
 with 'SearchFrequencies::Search';
+with 'SearchFrequencies::HttpSearch';
 
-use constant END_POINT => 'http://api.bing.net/json.aspx';
-
-has '_ua' => (
-    isa => 'LWP::UserAgent',
-    is => 'ro',
-    default => sub {
-        my $ua = LWP::UserAgent->new;
-        $ua->env_proxy;
-        return $ua;
-    }
-);
+has '+end_point' => ( default => 'http://api.bing.net/json.aspx' );
+has '+name' => ( default => 'Bing' );
 
 has '_app_id' => (
     isa => 'Str',
@@ -25,24 +17,22 @@ has '_app_id' => (
 
 sub search {
     my ($self, $query) = @_;
-    my $response = $self->_ua->get($self->_api_url(query => $query));
+    my $response = $self->_ua->get($self->form_url(query => $query));
     if ($response->is_success) {
         my $results = JSON::Any->jsonToObj($response->content);
-        use Data::Dumper;
-        die Dumper ($results);
+        return $results->{SearchResponse}->{Web}->{Total};
     }
 }
 
-sub _api_url {
+around 'form_url' => sub {
+    my $orig = shift;
     my ($self, %params) = @_;
     $params{AppId}   ||= $self->_app_id;
     $params{Version} ||= 2.2;
     $params{Market}  ||= 'en-GB';
     $params{Sources} ||= 'web';
-    my $url = END_POINT . '?' . join '&',
-        map { $_ . '=' . $params{$_} } keys %params;
-    return $url;
-}
+    return $orig->($self, %params);
+};
 
 __PACKAGE__->meta->make_immutable;
 1;
